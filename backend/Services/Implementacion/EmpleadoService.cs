@@ -64,10 +64,14 @@ namespace backend.Services.Implementacion
         }
 
 
-        public Task<bool> Update(Empleado modelo)
+        public async Task<bool> Update(Empleado modelo)
         {
             try
             {
+                _dbContext.Empleados.Update(modelo);
+                await _dbContext.SaveChangesAsync();
+
+                return true;
 
             }
             catch (Exception ex)
@@ -76,11 +80,14 @@ namespace backend.Services.Implementacion
             }
         }
 
-        public Task<bool> Delete(Empleado modelo)
+        public async Task<bool> Delete(Empleado modelo)
         {
             try
             {
+                _dbContext.Empleados.Remove(modelo);
+                await _dbContext.SaveChangesAsync();
 
+                return true;
             }
             catch (Exception ex)
             {

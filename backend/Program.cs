@@ -1,6 +1,9 @@
 using backend.Models;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
+
+using backend.Services.Contrato;
+using backend.Services.Implementacion;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +14,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DbempleadoContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL"));|  
+    options.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL"));
 });
+
+//implementar la inyeccion de los servicios
+builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 
 var app = builder.Build();
 
