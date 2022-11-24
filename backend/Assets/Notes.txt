@@ -1,0 +1,5 @@
+﻿# Cadena de conexión para db context.
+Scaffold-DbContext "Server=(local); DataBase=DBEmpleado;Trusted_Connection=True; TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+
+Server=(local); DataBase=DBEmpleado;Trusted_Connection=True; TrustServerCertificate=true
+
