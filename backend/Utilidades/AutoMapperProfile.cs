@@ -25,6 +25,19 @@ namespace backend.Utilidades
                .ForMember(destino =>
                     destino.FechaContrato,
                     opt => opt.MapFrom(origen => origen.FechaContrato.Value.ToString("dd/MM/yyyy")));
+
+
+            //EmpleadoDTO to Empleado
+            CreateMap<EmpleadoDTO, Empleado>()
+                .ForMember(destino =>
+                    destino.IdDepartamentoNavigation,
+                    opt => opt.Ignore()
+                )
+                .ForMember(destino =>
+                    destino.FechaContrato,
+                    opt => opt.MapFrom(origen => DateTime.ParseExact(origen.FechaContrato, "dd/MM/yyyy", CultureInfo.InvariantCulture))
+                );
+
             #endregion
 
 
