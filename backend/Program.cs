@@ -35,28 +35,26 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+#region PETICIONES API REST
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("departamento/lista", async (
+    IDepartamentoService _departamentoService,
+    IMapper _mapper
+    ) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateTime.Now.AddDays(index),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    List<Departamento>listaDepartamento = await _departamentoService.GetList();
+    List<DepartamentoDTO> listaDepartamentoDTO = _mapper.Map<List<DepartamentoDTO>>(listaDepartamento);
+
+    if (listaDepartamentoDTO.Count > 0)
+    {
+        return Results.Ok(listaDepartamentoDTO);
+    }
+    else
+    {
+        return Results.NotFound();
+    }
+});
+
+#endregion
 
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
