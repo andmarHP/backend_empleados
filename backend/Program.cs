@@ -46,13 +46,23 @@ app.MapGet("departamento/lista", async (
     List<DepartamentoDTO> listaDepartamentoDTO = _mapper.Map<List<DepartamentoDTO>>(listaDepartamento);
 
     if (listaDepartamentoDTO.Count > 0)
-    {
         return Results.Ok(listaDepartamentoDTO);
-    }
     else
-    {
         return Results.NotFound();
-    }
+});
+
+app.MapGet("empleados(lista", async(
+    IEmpleadoService _empleadoService,
+    IMapper _mapper
+    ) =>
+{
+    List<Empleado> listaEmpleado = await _empleadoService.GetList();
+    List<EmpleadoDTO> listaEmpleadoDTO = _mapper.Map<List<EmpleadoDTO>>(listaEmpleado);
+
+    if (listaEmpleadoDTO.Count > 0)
+        return Results.Ok(listaEmpleadoDTO);
+    else
+        return Results.NotFound();
 });
 
 #endregion
