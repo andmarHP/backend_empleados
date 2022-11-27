@@ -51,7 +51,7 @@ app.MapGet("departamento/lista", async (
         return Results.NotFound();
 });
 
-app.MapGet("empleados(lista", async(
+app.MapGet("empleados/lista", async(
     IEmpleadoService _empleadoService,
     IMapper _mapper
     ) =>
@@ -64,6 +64,65 @@ app.MapGet("empleados(lista", async(
     else
         return Results.NotFound();
 });
+
+app.MapPost("/empleado/guardar", async (
+    EmpleadoDTO modelo,
+    IEmpleadoService _empleadoService,
+    IMapper _mapper
+    ) => 
+{
+    var _empleado = _mapper.Map<Empleado>(modelo); //convertir modelo DTO a Empleado
+    var _empleadoCreado = await _empleadoService.Add(_empleado);
+    if (_empleadoCreado.IdEmpleado != 0)
+        return Results.Ok(_mapper.Map<EmpleadoDTO>(_empleadoCreado));
+    else
+        return Results.StatusCode(StatusCodes.Status500InternalServerError);
+});
+
+app.MapPut("/empleado/actualizar/{idEmpleado}", async (
+    int idEmpleado,
+    EmpleadoDTO modelo,
+    IEmpleadoService _empleadoService,
+    IMapper _mapper
+    ) => 
+{
+    var _encontrado = await _empleadoService.Get(idEmpleado);
+
+    if (_encontrado is null)
+        return Results.NotFound();
+
+    var _empleado = _mapper.Map<Empleado>(modelo); //convertir modelo DTO a Empleado
+
+    _encontrado.NombreCompleto = _empleado.NombreCompleto;
+    _encontrado.IdDepartamento = _empleado.IdDepartamento;
+    _encontrado.Sueldo = _empleado.Sueldo;
+    _encontrado.FechaContrato = _empleado.FechaContrato;
+
+    var respuesta = await _empleadoService.Update(_encontrado);
+    if (respuesta)
+        return Results.Ok(_mapper.Map<EmpleadoDTO>(_encontrado));
+    else
+        return Results.StatusCode(StatusCodes.Status500InternalServerError);
+});
+
+app.MapDelete("/empleado/eliminar/{idEmpleado}", async (
+    int idEmpleado,
+    IEmpleadoService _empleadoService
+    ) => 
+{
+    var _encontrado = await _empleadoService.Get(idEmpleado);
+
+    if (_encontrado is null)
+        return Results.NotFound();
+
+    var respuesta = await _empleadoService.Delete(_encontrado);
+
+    if (respuesta)
+        return Results.Ok();
+    else
+        return Results.StatusCode(StatusCodes.Status500InternalServerError);
+});
+
 
 #endregion
 
