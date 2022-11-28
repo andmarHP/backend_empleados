@@ -26,6 +26,17 @@ builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 //referencia de automapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
+//configuracion de los CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NuevaPolitica", app =>
+    {
+        app.AllowAnyOrigin();
+        app.AllowAnyHeader();
+        app.AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -125,5 +136,8 @@ app.MapDelete("/empleado/eliminar/{idEmpleado}", async (
 
 
 #endregion
+
+//habilitar cors
+app.UseCors("NuevaPolitica");
 
 app.Run();
